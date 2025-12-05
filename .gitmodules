@@ -1,0 +1,3 @@
+[submodule "kserve"]
+	path = kserve
+	url = https://github.com/kserve/kserve.git
