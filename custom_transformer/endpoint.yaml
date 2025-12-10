@@ -1,0 +1,36 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "mnist-tf"  # match the model name in the storageUri; also folder name cannot have underscore
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: tensorflow
+      storageUri: "gs://kubeflow-first-hand-experience/mnist-tf"
+      resources:
+        requests:
+          cpu: "1"
+          memory: "1Gi"
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+
+  transformer:
+    containers:
+      - image: 130l/image-transformer:latest
+        name: kserve-container
+        command:
+          - "python"
+          - "-m"
+          - "custom_transformer.model"
+        args:
+          - --model_name
+          - mnist
+        resources:
+          limits:
+            cpu: 1
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
